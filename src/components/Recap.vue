@@ -6,6 +6,7 @@
   <p>
     Score : {{ score }}/{{ quiz.questions.length }}
   </p>
+  <button @click="onLoad">Rejouer</button>
 </template>
 
 <script setup>
@@ -26,4 +27,14 @@ const score = computed(() => {
 })
 
 const hasWon = computed(() => score.value >= props.quiz.minimum_score)
+const onLoad = () => {
+  location.reload()
+}
 </script>
+
+<style>
+button{
+  margin-left: auto;
+  display: block;
+}
+</style>

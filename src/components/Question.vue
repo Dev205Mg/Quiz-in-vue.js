@@ -17,6 +17,9 @@
       </li>
     </ul>
   </div>
+  <p>
+    Vous avez : {{ t }} s
+  </p>
 </template>
 
 <script setup>
@@ -32,9 +35,13 @@ const answer = ref(null)
 const hasAnswer = computed(() => answer.value !== null)
 const randomChoice = computed(() => shuffleArray(props.question.choices))
 let timer
+const timeInResponse = 10000
+let time
+let t = ref(timeInResponse / 1000)
 
 const onAnswer = () => {
   clearTimeout(timer)
+  clearInterval(time)
   timer = setTimeout(() => {
     emits('answer', answer.value)
   }, 1_500)
@@ -44,10 +51,17 @@ onMounted(() => {
   timer = setTimeout(() => {
     answer.value = ''
     onAnswer()
-  }, 3_000)
+  }, timeInResponse)
+
+  time = setInterval(() => {
+    if(t.value > 0){
+      t.value--
+    }
+  }, 1_000)
 })
 
 onUnmounted(() => {
+  clearInterval(time)
   clearTimeout(timer)
 })
 
@@ -58,10 +72,6 @@ onUnmounted(() => {
   padding-top: 2rem;
 }
 
-.question button{
-  margin-left: auto;
-  display: block;
-}
 .question li{
   list-style: none;
 }
