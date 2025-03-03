@@ -18,7 +18,7 @@
     </ul>
   </div>
   <p>
-    Vous avez : {{ t }} s
+    Temps restant : {{ t }} s
   </p>
 </template>
 
@@ -41,28 +41,28 @@ let t = ref(timeInResponse / 1000)
 
 const onAnswer = () => {
   clearTimeout(timer)
-  clearInterval(time)
   timer = setTimeout(() => {
     emits('answer', answer.value)
   }, 1_500)
+  clearInterval(time)
 }
 
 onMounted(() => {
+  time = setInterval(() => {
+    if(t.value >= 0){
+      t.value--
+    }
+  }, 1_000)
+
   timer = setTimeout(() => {
     answer.value = ''
     onAnswer()
   }, timeInResponse)
-
-  time = setInterval(() => {
-    if(t.value > 0){
-      t.value--
-    }
-  }, 1_000)
 })
 
 onUnmounted(() => {
-  clearInterval(time)
   clearTimeout(timer)
+  clearInterval(time)
 })
 
 </script>
